@@ -1,0 +1,15 @@
+前缀 /novel
+参数 file 传小说id topic 小说id前
+/file  下载zip 解压缩
+/detail 获取小说详情
+/chapter  获取小说目录
+/del 删除小说文件
+
+
+参数 url 传小说文章url
+/content  返回小说文章
+
+/popularity 人气
+/reco 推荐
+/collect 收藏
+/hotsearch 热搜
