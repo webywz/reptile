@@ -33,6 +33,8 @@ router.get('/file', async (req, res, next) => {
     fs.exists(`./contents/${fileName}`, async (exists) => {
       if (exists) {
         res.json({ msg: '文件存在' })
+        zip.close()
+        fs.unlinkSync(`./contents/${fileName}.zip`)
       }
       if (!exists) {
         fs.mkdirSync(`./contents/${fileName}`)
@@ -92,7 +94,7 @@ function deleteall(path) {
 }
 router.get('/del', async (req, res, next) => {
   const fileName = urlLib.parse(req.url, true).query.file
-  deleteall(`./${fileName}`)
+  deleteall(`./contents/${fileName}`)
   res.json({ msg: '删除成功' })
 })
 
