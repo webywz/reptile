@@ -64,11 +64,11 @@ function banner() {
           sliders.push(sliderItem)
         }
         // 处理轮播图数据
-        // let addSql
-        // sliders.map(item => {
-        //     addSql = `REPLACE INTO banner(id,pic,link) VALUES('${item.id}','${item.pic}','${item.link}')`
-        //     exec(addSql).then(r => {})
-        // })
+        let addSql
+        sliders.map((item) => {
+          addSql = `REPLACE INTO banner(id,pic,link) VALUES('${item.id}','${item.pic}','${item.link}')`
+          exec(addSql).then((r) => {})
+        })
 
         // 歌单数据
         const albumList = data.recomPlaylist.data.v_hot
@@ -83,11 +83,11 @@ function banner() {
           albumItem.pic = item.cover
           albums.push(albumItem)
         }
-        // let albumsAddSql
-        // albums.map(item => {
-        //     albumsAddSql = `REPLACE INTO albums(id,username,title,pic) VALUES('${item.id}','${item.username}','${item.title}','${item.pic}')`
-        //     exec(albumsAddSql).then(r => {})
-        // })
+        let albumsAddSql
+        albums.map((item) => {
+          albumsAddSql = `REPLACE INTO albums(id,username,title,pic) VALUES('${item.id}','${item.username}','${item.title}','${item.pic}')`
+          exec(albumsAddSql).then((r) => {})
+        })
       }
     })
 }
