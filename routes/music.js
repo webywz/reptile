@@ -1,7 +1,7 @@
 let express = require('express')
 let router = express.Router()
 const axios = require('axios')
-const { getBanner, getAlbums } = require('../controller/music')
+// const { getBanner, getAlbums } = require('../controller/music')
 const singerData = require('../music/singerList')
 const singerDetail = require('../music/singerDetail')
 const songsUrl = require('../music/songsUrl')
@@ -15,14 +15,14 @@ const search = require('../music/search')
 // router.get('/', function(req, res, next) {
 //   res.render('index', { title: 'Express' });
 // });
-router.get('/music/banner', async (req, res, next) => {
-  const result = await getBanner()
-  return res.json(result)
-})
-router.get('/music/albums', async (req, res, next) => {
-  const result = await getAlbums()
-  res.json(result)
-})
+// router.get('/music/banner', async (req, res, next) => {
+//   const result = await getBanner()
+//   return res.json(result)
+// })
+// router.get('/music/albums', async (req, res, next) => {
+//   const result = await getAlbums()
+//   res.json(result)
+// })
 router.get('/music/singerList', async (req, res, next) => {
   const result = await singerData()
   res.json(result)
