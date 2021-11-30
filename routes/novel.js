@@ -27,8 +27,8 @@ router.get('/file', async (req, res, next) => {
   const fileTopic = urlLib.parse(req.url, true).query.topic
   const fileName = urlLib.parse(req.url, true).query.file
   fs.writeFileSync(
-    `./contents/${fileName}.zip`,
-    await download(`http://statics.rungean.com/static/book/zip/${fileTopic}/${fileName}.zip`)
+      `./contents/${fileName}.zip`,
+      await download(`http://statics.rungean.com/static/book/zip/${fileTopic}/${fileName}.zip`)
   )
   const zip = new StreamZip({ file: `./contents/${fileName}.zip`, storeEntries: true })
   //解压所有文件
@@ -101,7 +101,7 @@ router.get('/zip', async (req, res, next) => {
   }).then(content => {
     // 把zip包写到硬盘中，这个content现在是一段buffer
     fs.writeFileSync(`./contents/${fileName}/zipTxt.zip`, content);
-    res.json({ zip: "压缩完成" })
+    res.json({ zip: `http://file.web-ywz.top/${fileName}/zipTxt.zip` })
   }).catch(e => {
     console.log(e)
   });
