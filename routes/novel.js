@@ -8,11 +8,11 @@ const fs = require('fs')
 const path = require('path')
 const request = require('request')
 const axios = require('axios')
-const JSZIP = require('jszip');
-const zip = new JSZIP();
+const JSZIP = require('jszip')
+const zip = new JSZIP()
 const download = require('download')
 const agent = new https.Agent({
-  rejectUnauthorized: false,
+  rejectUnauthorized: false
 })
 
 router.get('/search', async (req, res, next) => {
@@ -27,8 +27,8 @@ router.get('/file', async (req, res, next) => {
   const fileTopic = urlLib.parse(req.url, true).query.topic
   const fileName = urlLib.parse(req.url, true).query.file
   fs.writeFileSync(
-      `./contents/${fileName}.zip`,
-      await download(`http://statics.rungean.com/static/book/zip/${fileTopic}/${fileName}.zip`)
+    `./contents/${fileName}.zip`,
+    await download(`http://statics.rungean.com/static/book/zip/${fileTopic}/${fileName}.zip`)
   )
   const zip = new StreamZip({ file: `./contents/${fileName}.zip`, storeEntries: true })
   //解压所有文件
@@ -53,13 +53,13 @@ router.get('/file', async (req, res, next) => {
 })
 
 /*
-* url 网络文件地址
-* filename 文件名
-* callback 回调函数
-*/
-function downloadFile(uri,filename,callback){
-  let stream = fs.createWriteStream(filename);
-  request(uri).pipe(stream).on('close', callback);
+ * url 网络文件地址
+ * filename 文件名
+ * callback 回调函数
+ */
+function downloadFile(uri, filename, callback) {
+  let stream = fs.createWriteStream(filename)
+  request(uri).pipe(stream).on('close', callback)
 }
 router.get('/txt', async (req, res, next) => {
   const fileName = urlLib.parse(req.url, true).query.file
@@ -77,11 +77,15 @@ router.get('/txt', async (req, res, next) => {
     for await (const item of JSON.parse(JSONStr.chapter).data) {
       i++
       try {
-        downloadFile(item.content_url, `./contents/${fileName}/txtFile/${i}${item.name}.txt`, () => {
-          console.log(`${i}${item.name}.txt`)
-        })
+        downloadFile(
+          item.content_url,
+          `./contents/${fileName}/txtFile/${i}${item.name}.txt`,
+          () => {
+            console.log(`${i}${item.name}.txt`)
+          }
+        )
       } catch (e) {
-        console.log(e.config.url, "======================")
+        console.log(e.config.url, '======================')
       }
     }
     res.json({ zipTxt: JSON.parse(JSONStr.chapter).data })
@@ -91,53 +95,61 @@ router.get('/txt', async (req, res, next) => {
 router.get('/zip', async (req, res, next) => {
   const fileName = urlLib.parse(req.url, true).query.file
   const sourceDir = `./contents/${fileName}/txtFile`
-  readDir(zip, sourceDir);
-  zip.generateAsync({
-    type: "nodebuffer", // 压缩类型
-    compression: "DEFLATE", // 压缩算法
-    compressionOptions: { // 压缩级别
-      level: 9
-    }
-  }).then(content => {
-    // 把zip包写到硬盘中，这个content现在是一段buffer
-    fs.writeFileSync(`./contents/${fileName}/zipTxt.zip`, content);
-    res.json({ zip: `http://file.web-ywz.top/${fileName}/zipTxt.zip` })
-  }).catch(e => {
-    console.log(e)
-  });
+  readDir(zip, sourceDir)
+  zip
+    .generateAsync({
+      type: 'nodebuffer', // 压缩类型
+      compression: 'DEFLATE', // 压缩算法
+      compressionOptions: {
+        // 压缩级别
+        level: 9
+      }
+    })
+    .then((content) => {
+      // 把zip包写到硬盘中，这个content现在是一段buffer
+      fs.writeFileSync(`./contents/${fileName}/zipTxt.zip`, content)
+      res.json({ zip: `http://file.web-ywz.top/${fileName}/zipTxt.zip` })
+    })
+    .catch((e) => {
+      console.log(e)
+    })
 })
 function readDir(zip, dirPath) {
   // 读取dist下的根文件目录
-  const files = fs.readdirSync(dirPath);
-  files.forEach(fileName => {
-    const fillPath = dirPath + "/" + fileName;
-    const file = fs.statSync(fillPath);
+  const files = fs.readdirSync(dirPath)
+  files.forEach((fileName) => {
+    const fillPath = dirPath + '/' + fileName
+    const file = fs.statSync(fillPath)
     // 如果是文件夹的话需要递归遍历下面的子文件
     if (file.isDirectory()) {
-      const dirZip = zip.folder(fileName);
-      readDir(dirZip, fillPath);
+      const dirZip = zip.folder(fileName)
+      readDir(dirZip, fillPath)
     } else {
       // 读取每个文件为buffer存到zip中
-      zip.file(fileName, fs.readFileSync(fillPath));
+      zip.file(fileName, fs.readFileSync(fillPath))
     }
-  });
+  })
 }
 function generateZip(fileName) {
   const sourceDir = `./contents/${fileName}/zipTxt`
-  readDir(zip, sourceDir);
-  zip.generateAsync({
-    type: "nodebuffer", // 压缩类型
-    compression: "DEFLATE", // 压缩算法
-    compressionOptions: { // 压缩级别
-      level: 9
-    }
-  }).then(content => {
-    // 把zip包写到硬盘中，这个content现在是一段buffer
-    fs.writeFileSync(`./contents/${fileName}/zipTxt.zip`, content);
-    console.log('压缩完成')
-  }).catch(e => {
-    console.log(e)
-  });
+  readDir(zip, sourceDir)
+  zip
+    .generateAsync({
+      type: 'nodebuffer', // 压缩类型
+      compression: 'DEFLATE', // 压缩算法
+      compressionOptions: {
+        // 压缩级别
+        level: 9
+      }
+    })
+    .then((content) => {
+      // 把zip包写到硬盘中，这个content现在是一段buffer
+      fs.writeFileSync(`./contents/${fileName}/zipTxt.zip`, content)
+      console.log('压缩完成')
+    })
+    .catch((e) => {
+      console.log(e)
+    })
 }
 
 router.get('/detail', async (req, res, next) => {
@@ -191,8 +203,12 @@ router.get('/del', async (req, res, next) => {
 
 router.get('/content', async (req, res, next) => {
   const url = urlLib.parse(req.url, true).query.url
-  let result = await axios.get(url)
-  res.json({ res: result.data })
+  try {
+    let result = await axios.get(url)
+    res.json({ res: result.data })
+  } catch {
+    res.json({ res: '没有当前章节' })
+  }
 })
 
 // 人气
